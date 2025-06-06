@@ -1,10 +1,13 @@
-import type { DefaultSession, NextAuthConfig } from "next-auth";
+import NextAuth from "next-auth";
+import type { NextAuthConfig } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
-import { Account, User } from "next-auth";
+import type { Account } from "next-auth";
+import type { DefaultSession } from "next-auth";
 
 type ExtendedSession = DefaultSession & {
   accessToken?: string;
+  refreshToken?: string;
 };
 
 export const authOptions: NextAuthConfig = {
@@ -35,6 +38,7 @@ export const authOptions: NextAuthConfig = {
     async session({ session, token }) {
       // Send properties to the client, like an access_token and user id from a provider
       (session as ExtendedSession).accessToken = token.accessToken as string;
+      (session as ExtendedSession).refreshToken = token.refreshToken as string;
       return session;
     },
   },
@@ -51,6 +55,7 @@ export const authOptions: NextAuthConfig = {
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
+    refreshToken?: string;
   }
 }
 
@@ -60,3 +65,6 @@ export interface CustomJWT extends JWT {
   refreshToken?: string;
   expiresAt?: number;
 }
+
+// Export the auth function for use in API routes
+export const { auth, handlers } = NextAuth(authOptions);

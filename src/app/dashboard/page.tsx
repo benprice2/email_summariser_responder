@@ -3,8 +3,10 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Layout from "../../components/Layout";
-import AuthButton from "../../components/AuthButton";
+import Layout from "@/components/Layout";
+import AuthButton from "@/components/AuthButton";
+import EmailList from "@/components/EmailList";
+import EmailStats from "@/components/EmailStats";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -59,19 +61,16 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="card">
-            <h2 className="text-xl font-semibold mb-4">Recent Emails</h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              Your emails will appear here once we implement the Gmail API integration.
-            </p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4">Recent Emails</h2>
+              <EmailList />
+            </div>
           </div>
           
-          <div className="card">
-            <h2 className="text-xl font-semibold mb-4">Email Stats</h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              Email statistics will be displayed here in the next phase.
-            </p>
+          <div className="lg:col-span-1">
+            <EmailStats />
           </div>
         </div>
       </div>
